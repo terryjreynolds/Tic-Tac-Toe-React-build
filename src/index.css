@@ -1,0 +1,140 @@
+body {
+  color:white;
+    margin: 20px;
+    background: rgb(40, 44, 52);
+  }
+  * {
+    box-sizing: border-box;
+}
+.app {
+  display: grid;
+  margin: auto;
+  width: 70vw;
+  height: auto;
+  justify-items: center;
+  grid-template-rows: auto, auto, auto, auto, auto, auto;
+  grid-template-columns: auto, auto, auto;
+}
+.game-board {
+  display: grid;
+  grid-area: 4/1/span 1/ span 3;
+  grid-template-rows: auto, auto, auto;
+  grid-template-columns: auto, auto, auto;
+  margin: auto;
+  width: 30vw;
+  height: 30vw;
+}
+.game-title {
+  text-align: center;
+  grid-area: 1/1/ span 1/ span 3;
+  font-size: 3vw;
+  font-family: 'Noto Sans', sans-serif;
+  color:rgb(97,218,251);
+}
+.scoreboard {
+  text-align: center;
+  font-size: 2vw;
+  grid-area: 3/1/span 1/span 3;
+  font-family: 'Noto Sans', sans-serif;
+}
+.player-integer {
+  margin: .5vw;
+}
+.computer-integer {
+  margin: .5vw;
+}
+.reset-button {
+  margin: auto;
+  font-size: 1vw;
+  text-align: center;
+  grid-area: 2/2/span 1/span 1;
+  font-family: 'Noto Sans', sans-serif;
+  cursor: pointer;
+}
+.sm-button {
+  margin: auto;
+  font-size: 100%;
+  text-align: center;
+  color: white;
+  background: black;
+}
+.level-selector {
+  grid-area: 2/1/span 1/ span 1;
+  text-align: center;
+  font-size: 1.3vw;
+  font-family: 'Noto Sans', sans-serif;
+}
+.token-selector {
+  grid-area: 2/3/span 1/ span 1;
+  text-align: center;
+  font-size: 1.3vw;
+  font-family: 'Noto Sans', sans-serif;
+}
+.footer {
+  grid-area: 6/1/span 1/ span 3;
+  text-align: center;
+  font-size:calc(8px + .3vw);
+	font-family: 'Noto Sans', sans-serif;
+  color: white;
+  cursor: pointer;
+}
+.square {
+  text-align: center;
+  padding: 1vw;
+  font-size: 4vw;
+  border-color: rgb(97,218,251);
+  font-family: 'Noto Sans', sans-serif;
+  
+}
+
+
+
+/*---------------------------ROW 1------------------------*/
+#sq1 {
+  grid-area: 1/1/span 1/span 1;
+  border-right: solid 2px black;
+  border-bottom: solid 2px black;
+}
+#sq2 {
+  grid-area: 1/2/span 1/span 1;
+  border-right: solid 2px black;
+  border-bottom: solid 2px black;
+}
+#sq3{
+  grid-area: 1/3/span 1/span 1;
+  border-bottom: solid 2px black;
+}
+/*---------------------------ROW 2------------------------*/
+#sq4 {
+  grid-area: 2/1/span 1/span 1;
+  border-right: solid 2px black;
+  border-bottom: solid 2px black;
+}
+#sq5 {
+  grid-area: 2/2/span 1/span 1;
+  border-right: solid 2px black;
+  border-bottom: solid 2px black;
+}
+#sq6 {
+  grid-area: 2/3/span 1/span 1;
+  border-bottom: solid 2px black;
+}
+/*---------------------------ROW 3------------------------*/
+
+#sq7 {
+  grid-area: 3/1/span 1/span 1;
+  border-right: solid 2px black;
+  border-bottom: solid 2px black;
+}
+#sq8 {
+  grid-area: 3/2/span 1/span 1;
+  border-right: solid 2px black;
+  border-bottom: solid 2px black;
+}
+#sq9 {
+  grid-area: 3/3/span 1/span 1;
+  border-bottom: solid 2px black;
+}
+
+  
+  
