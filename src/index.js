@@ -58,17 +58,33 @@ class ResetButton extends React.Component {
 }
 
 class LevelSelector extends React.Component {
+  opacity_change(id) {
+    const el = document.getElementById(id);
+    el.style.opacity = ".5";
+  }
+   opacity_restore(id) {
+    const el = document.getElementById(id);
+    el.style.opacity = "1";
+  }
   render() {
     return (
-      <div className="level-selector">Level <button className="sm-button">1</button> or <button className="sm-button">2</button> ?</div>
+      <div className="level-selector">Level <button className="sm-button" id="level_one" onMouseOver={() => this.opacity_change("level_one")} onMouseOut={() => this.opacity_restore("level_one")}>1</button> or <button className="sm-button" id="level_two" onMouseOver={() => this.opacity_change("level_two")} onMouseOut={() => this.opacity_restore("level_two")}>2</button> ?</div>
     );
   }
 }
 
 class TokenSelector extends React.Component {
+  opacity_change(id) {
+    const el = document.getElementById(id);
+    el.style.opacity = ".5";
+  }
+   opacity_restore(id) {
+    const el = document.getElementById(id);
+    el.style.opacity = "1";
+  }
   render() {
     return (
-      <div className="token-selector">Choose <button className="sm-button">X</button> or <button className="sm-button">O</button></div>
+      <div className="token-selector">Choose <button className="sm-button" id="token_X" onMouseOver={() => this.opacity_change("token_X")} onMouseOut={() => this.opacity_restore("token_X")}>X</button> or <button className="sm-button" id="token_O" onMouseOver={() => this.opacity_change("token_O")} onMouseOut={() => this.opacity_restore("token_O")}>O</button></div>
     );
   }
 }
@@ -80,10 +96,6 @@ class Footer extends React.Component {
     );
   }
 }
-
-
-
-
 
 ReactDOM.render(
   <App />,
