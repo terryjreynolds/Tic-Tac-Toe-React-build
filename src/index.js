@@ -3,15 +3,25 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class App extends React.Component {
-  
+  constructor(props) {
+    super(props);
+    this.state = {
+      level: "one",
+      player_token: "X",
+      player_score: 0,
+      computer_score: 0
+    }
+  }
   render() {
+    const level = this.state.level
     return (
+      
       <div className="app">
         <h1 className="game-title">TicTacToe</h1>
           <ScoreBoard />
           <ResetButton />
           <GameBoard />
-          <LevelSelector />
+          <LevelSelector level = {level} />
           <TokenSelector />
           <Footer />
       </div>
@@ -21,6 +31,7 @@ class App extends React.Component {
 }
 
 class GameBoard extends React.Component {
+ 
   render() {
     return (
       <div className="game-board">
@@ -58,6 +69,11 @@ class ResetButton extends React.Component {
 }
 
 class LevelSelector extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {two_button_click: "no"};
+    this.handleClick = this.handleClick.bind(this);
+  }
   opacity_change(id) {
     const el = document.getElementById(id);
     el.style.opacity = ".5";
@@ -66,9 +82,15 @@ class LevelSelector extends React.Component {
     const el = document.getElementById(id);
     el.style.opacity = "1";
   }
+  
+
+  handleClick(){
+    this.setState({two_button_click: "yes"});
+    console.log(this.props.level);
+  }
   render() {
     return (
-      <div className="level-selector">Level <button className="sm-button" id="level_one" onMouseOver={() => this.opacity_change("level_one")} onMouseOut={() => this.opacity_restore("level_one")}>1</button> or <button className="sm-button" id="level_two" onMouseOver={() => this.opacity_change("level_two")} onMouseOut={() => this.opacity_restore("level_two")}>2</button> ?</div>
+      <div className="level-selector">Level <button className="sm-button" id="level_one" onClick={this.handleClick} onMouseOver={() => this.opacity_change("level_one")} onMouseOut={() => this.opacity_restore("level_one")}>1</button> or <button className="sm-button" id="level_two" onMouseOver={() => this.opacity_change("level_two")} onMouseOut={() => this.opacity_restore("level_two")}>2</button> ?</div>
     );
   }
 }
@@ -81,6 +103,9 @@ class TokenSelector extends React.Component {
    opacity_restore(id) {
     const el = document.getElementById(id);
     el.style.opacity = "1";
+  }
+  handleClick() {
+
   }
   render() {
     return (
