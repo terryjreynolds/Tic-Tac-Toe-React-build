@@ -6,8 +6,6 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      level: "one",
-      player_token: "X",
       player_score: 0,
       computer_score: 0
     }
@@ -71,8 +69,13 @@ class ResetButton extends React.Component {
 class LevelSelector extends React.Component {
   constructor(props){
     super(props);
-    this.state = {two_button_click: "no"};
-    this.handleClick = this.handleClick.bind(this);
+    this.state = {
+      button1: "off",
+      button2: "off",
+    level: "1"
+  };
+    this.handleOneClick = this.handleOneClick.bind(this);
+    this.handleTwoClick = this.handleTwoClick.bind(this);
   }
   opacity_change(id) {
     const el = document.getElementById(id);
@@ -82,20 +85,53 @@ class LevelSelector extends React.Component {
     const el = document.getElementById(id);
     el.style.opacity = "1";
   }
+  handleOneClick(id) {
+    const el1 = document.getElementById(id);
+    if (this.state.button2 === "off") {
+      if (this.state.button1 === "off") {
+        el1.style.background = "rgb(97,218,251)";
+        el1.style.color = "black";
+        this.setState({button1: "on"});
+      }else {
+        el1.style.background = "black";
+      el1.style.color = "white";
+      this.setState({button1: "off"});
+      }
+    }
+  }
   
-
-  handleClick(){
-    this.setState({two_button_click: "yes"});
-    console.log(this.props.level);
+  handleTwoClick(id){
+    const el2 = document.getElementById(id);
+    if (this.state.button1 === "off") {
+    if (this.state.button2 === "off"){
+    el2.style.background = "rgb(97,218,251)";
+    el2.style.color = "black";
+    this.setState({button2: "on", level: "2"});
+    }else{
+      el2.style.background = "black";
+      el2.style.color = "white";
+      this.setState({button2: "off", level: "1"});
+    }
+  }
   }
   render() {
     return (
-      <div className="level-selector">Level <button className="sm-button" id="level_one" onClick={this.handleClick} onMouseOver={() => this.opacity_change("level_one")} onMouseOut={() => this.opacity_restore("level_one")}>1</button> or <button className="sm-button" id="level_two" onMouseOver={() => this.opacity_change("level_two")} onMouseOut={() => this.opacity_restore("level_two")}>2</button> ?</div>
+      <div className="level-selector">Level <button className="sm-button" id="level_one" onClick={() => this.handleOneClick("level_one")}  onMouseOver={() => this.opacity_change("level_one")} onMouseOut={() => this.opacity_restore("level_one")}>1</button> or <button className="sm-button" id="level_two" onClick={() => this.handleTwoClick("level_two")} onMouseOver={() => this.opacity_change("level_two")} onMouseOut={() => this.opacity_restore("level_two")}>2</button> ?</div>
     );
   }
 }
 
 class TokenSelector extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      button3: "off",
+      button4: "off",
+      player_token: "X"
+  };
+    this.handleThreeClick = this.handleThreeClick.bind(this);
+    this.handleFourClick = this.handleFourClick.bind(this);
+  }
   opacity_change(id) {
     const el = document.getElementById(id);
     el.style.opacity = ".5";
@@ -104,12 +140,38 @@ class TokenSelector extends React.Component {
     const el = document.getElementById(id);
     el.style.opacity = "1";
   }
-  handleClick() {
-
+  handleThreeClick(id) {
+    const el1 = document.getElementById(id);
+    if (this.state.button4 === "off") {
+      if (this.state.button3 === "off") {
+        el1.style.background = "rgb(97,218,251)";
+        el1.style.color = "black";
+        this.setState({button3: "on"});
+      }else {
+        el1.style.background = "black";
+      el1.style.color = "white";
+      this.setState({button3: "off", player_token: "O"});
+      }
+    }
+  }
+  
+  handleFourClick(id){
+    const el2 = document.getElementById(id);
+    if (this.state.button3 === "off") {
+    if (this.state.button4 === "off"){
+    el2.style.background = "rgb(97,218,251)";
+    el2.style.color = "black";
+    this.setState({button4: "on"});
+    }else{
+      el2.style.background = "black";
+      el2.style.color = "white";
+      this.setState({button4: "off"});
+    }
+  }
   }
   render() {
     return (
-      <div className="token-selector">Choose <button className="sm-button" id="token_X" onMouseOver={() => this.opacity_change("token_X")} onMouseOut={() => this.opacity_restore("token_X")}>X</button> or <button className="sm-button" id="token_O" onMouseOver={() => this.opacity_change("token_O")} onMouseOut={() => this.opacity_restore("token_O")}>O</button></div>
+      <div className="token-selector">Choose <button className="sm-button" id="token_X" onClick={() => this.handleThreeClick("token_X")} onMouseOver={() => this.opacity_change("token_X")} onMouseOut={() => this.opacity_restore("token_X")}>X</button> or <button className="sm-button" id="token_O" onClick={() => this.handleFourClick("token_O")} onMouseOver={() => this.opacity_change("token_O")} onMouseOut={() => this.opacity_restore("token_O")}>O</button></div>
     );
   }
 }
