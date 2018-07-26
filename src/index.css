@@ -52,7 +52,7 @@ body {
   cursor: pointer;
 }
 .sm-button {
-  margin: auto;
+  margin: .5vh;
   font-size: 100%;
   text-align: center;
   color: white;
