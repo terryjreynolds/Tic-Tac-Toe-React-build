@@ -5,11 +5,18 @@ import './index.css';
 class App extends React.Component {
   constructor(props) {
     super(props);
+    
     this.state = {
+      level: 1,
       player_score: 0,
       computer_score: 0
-    }
+    };
+    
   }
+  handler() {
+    console.log("hi");
+  }
+ 
   render() {
     return (
       
@@ -18,7 +25,7 @@ class App extends React.Component {
           <ScoreBoard />
           <ResetButton />
           <GameBoard />
-          <LevelSelector  />
+          <LevelSelector  action={this.handler.bind(this)} />
           <TokenSelector />
           <Footer />
       </div>
@@ -66,11 +73,11 @@ class ResetButton extends React.Component {
 }
 
 class LevelSelector extends React.Component {
-  
+
   render() {
     return (
-      <div className="level-selector">Level
-      <SmallButton  label="1" />or  
+      <div className="level-selector" >Level
+      <SmallButton  label="1" onClick={this.props.action} />or  
       <SmallButton  label="2" />?
       </div>
        
@@ -95,7 +102,7 @@ class SmallButton extends React.Component {
     super(props);
     this.state = {
       opacity: 1
-    }
+    };
     this.mouseOver = this.mouseOver.bind(this);
     this.mouseOut = this.mouseOut.bind(this);
   }
