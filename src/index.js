@@ -12,6 +12,8 @@ class App extends React.Component {
       player_score: 0,
       computer_score: 0
     };
+
+
     
   }
   handlerLevel(id) {
@@ -36,17 +38,28 @@ class App extends React.Component {
       } 
     }
    }
+   handlerReset() {
+    
+      this.setState({
+        level: 1,
+        player_token: "X",
+        player_score: 0,
+        computer_score: 0
+      });
+      
+    }
  
   render() {
+    console.log(this.state);
     return (
       
       <div className="app">
         <h1 className="game-title">TicTacToe</h1>
           <ScoreBoard />
-          <ResetButton />
+          <ResetButton action={this.handlerReset.bind(this)} />
           <GameBoard />
           <LevelSelector  action={this.handlerLevel.bind(this)} />
-          <TokenSelector action={this.handlerToken.bind(this)}/>
+          <TokenSelector action={this.handlerToken.bind(this)} />
           <Footer />
       </div>
       
@@ -87,7 +100,7 @@ class ScoreBoard extends React.Component {
 class ResetButton extends React.Component {
   render() {
     return (
-      <button className="reset-button">Reset Game</button>
+      <button className="reset-button" onClick={(e) => this.props.action()}>Reset Game</button>
     );
   }
 }
