@@ -103,48 +103,48 @@ body {
 
 
 /*---------------------------ROW 1------------------------*/
-#sq1 {
+#sq0 {
   grid-area: 1/1/span 1/span 1;
   border-right: solid 2px black;
   border-bottom: solid 2px black;
 }
-#sq2 {
+#sq1 {
   grid-area: 1/2/span 1/span 1;
   border-right: solid 2px black;
   border-bottom: solid 2px black;
 }
-#sq3{
+#sq2{
   grid-area: 1/3/span 1/span 1;
   border-bottom: solid 2px black;
 }
 /*---------------------------ROW 2------------------------*/
-#sq4 {
+#sq3 {
   grid-area: 2/1/span 1/span 1;
   border-right: solid 2px black;
   border-bottom: solid 2px black;
 }
-#sq5 {
+#sq4 {
   grid-area: 2/2/span 1/span 1;
   border-right: solid 2px black;
   border-bottom: solid 2px black;
 }
-#sq6 {
+#sq5 {
   grid-area: 2/3/span 1/span 1;
   border-bottom: solid 2px black;
 }
 /*---------------------------ROW 3------------------------*/
 
-#sq7 {
+#sq6 {
   grid-area: 3/1/span 1/span 1;
   border-right: solid 2px black;
   border-bottom: solid 2px black;
 }
-#sq8 {
+#sq7 {
   grid-area: 3/2/span 1/span 1;
   border-right: solid 2px black;
   border-bottom: solid 2px black;
 }
-#sq9 {
+#sq8 {
   grid-area: 3/3/span 1/span 1;
   border-bottom: solid 2px black;
 }

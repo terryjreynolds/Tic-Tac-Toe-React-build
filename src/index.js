@@ -9,6 +9,7 @@ class App extends React.Component {
     this.buttonToggleTwo = this.buttonToggleTwo.bind(this);
     this.buttonToggleX = this.buttonToggleX.bind(this);
     this.buttonToggleO = this.buttonToggleO.bind(this);
+    
     this.state = {
       level: 1,
       player_token: "X",
@@ -17,8 +18,33 @@ class App extends React.Component {
       btn1: "off",
       btn2: "off",
       btnX: "off",
-      btnO: "off"
+      btnO: "off",
+      whosTurn: "player",
+      board: ["","X","X",
+              "","","",
+              "","", ""]
     }; 
+  }
+
+  updateBoard(square, int, token) {
+    let theOtherGuy = this.state.whosTurn
+    theOtherGuy === "player" ?  theOtherGuy = "AI" : theOtherGuy = "player";
+    const newArray = this.state.board.slice();  
+    console.log('newArray', newArray);  
+    newArray.splice(int, 1, token); 
+    console.log('spliced newArray', newArray);  
+    this.setState(() => {
+      return {
+        board: newArray,
+        whosTurn: theOtherGuy
+      };
+    });
+    if(this.state.board[int] !== "" || this.state.whosTurn === "AI") {
+      document.getElementById('sq'+ int).setAttribute("disabled","true");
+    }
+     checkForWinOrDraw(newArray);
+    
+
   }
   handlerLevel(id) {
     if(id === "btn1"){
@@ -207,37 +233,58 @@ class App extends React.Component {
         <h1 className="game-title">TicTacToe</h1>
           <ScoreBoard />
           <ResetButton value={this.state} action={this.handlerReset.bind(this)} />
-          <GameBoard />
+          <GameBoard whosTurn={this.state.whosTurn} player_token={this.state.player_token} board ={this.state.board} updateBoard={this.updateBoard.bind(this)} />
           <LevelSelector  action={this.handlerLevel.bind(this)} buttonToggleOne={this.buttonToggleOne} buttonToggleTwo={this.buttonToggleTwo} />
           <TokenSelector action={this.handlerToken.bind(this)} buttonToggleX={this.buttonToggleX} buttonToggleO={this.buttonToggleO} />
           <Footer />
-      </div>
-      
+      </div>     
     );
   }
 }
-
-class GameBoard extends React.Component {
- 
+class GameBoard extends React.Component { 
   render() {
     return (
       <div className="game-board">
-                <button className="square" id="sq1"></button>
-                <button className="square" id="sq2"></button>
-                <button className="square" id="sq3"></button>
-                <button className="square" id="sq4"></button>
-                <button className="square" id="sq5"></button>
-                <button className="square" id="sq6"></button>
-                <button className="square" id="sq7"></button>
-                <button className="square" id="sq8"></button>
-                <button className="square" id="sq9"></button>
+                <button 
+                className="square" id="sq0" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq0", 0, this.props.player_token)}}}>
+               {this.props.board[0]}
+                </button>
+                <button 
+                className="square" id="sq1" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq1", 1, this.props.player_token)}}}>
+                {this.props.board[1]}
+                </button>
+                <button 
+                className="square" id="sq2" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq1", 2, this.props.player_token)}}}>
+                {this.props.board[2]}
+                </button>
+                <button 
+                className="square" id="sq3" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq3", 3, this.props.player_token)}}}>
+                {this.props.board[3]}
+                </button>
+                <button 
+                className="square" id="sq4" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq4", 4, this.props.player_token)}}}>
+                {this.props.board[4]}
+                </button>
+                <button 
+                className="square" id="sq5" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq5", 5, this.props.player_token)}}}>
+                {this.props.board[5]}
+                </button>
+                <button 
+                className="square" id="sq6" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq6", 6, this.props.player_token)}}}>
+                {this.props.board[6]}
+                </button>
+                <button 
+                className="square" id="sq7" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq7", 7, this.props.player_token)}}}>
+                {this.props.board[7]}
+                </button>
+                <button 
+                className="square" id="sq8" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq8", 8, this.props.player_token)}}}>
+                {this.props.board[8]}
+                </button>
       </div>
     );               
-
- }
-  
+ }  
 }
-
 class ScoreBoard extends React.Component {
   render() {
     return (
@@ -246,31 +293,22 @@ class ScoreBoard extends React.Component {
     );
   }
 }
-
 class ResetButton extends React.Component {
-  resetButtons(obj){
-    console.log('the button object is', obj);
-  }
   render() {
-    console.log('heres the object', this.props.value);
     return (
       <button className="reset-button" onClick={(e) => this.props.action()}>Reset Game</button>
     );
   }
 }
-
 class LevelSelector extends React.Component {
   render() {
-    return (
-      
+    return (     
       <div className="level-selector">Level 
         <button className="sm-button" id="button1" onClick={(e) => {this.props.action("btn1"); this.props.buttonToggleOne()}}>1</button>or 
         <button className="sm-button" id="button2" onClick={(e) =>{ this.props.action("btn2"); this.props.buttonToggleTwo()}}>2</button>?
-      </div> 
-        
+      </div>         
     );
-  }
- 
+  } 
 }
 class TokenSelector extends React.Component {
   render() {
@@ -282,7 +320,6 @@ class TokenSelector extends React.Component {
     );
   }
 }
-
 class Footer extends React.Component {
   render() {
     return (
@@ -290,6 +327,18 @@ class Footer extends React.Component {
     );
   }
 }
+
+//----------------JS Helper Functions-------------------------
+
+function checkForWinOrDraw(arr) {
+  
+ const x = arr.slice(0,3).every((c) => c === "X");
+ console.log(x);
+   
+ 
+
+}
+
 
 ReactDOM.render(
   <App />,
