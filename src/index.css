@@ -57,6 +57,19 @@ body {
   text-align: center;
   color: white;
   background: black;
+  opacity: 1;
+}
+.sm-button:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+.sm-button-clicked {
+  margin: .5vh;
+  font-size: 100%;
+  text-align: center;
+  color: black;
+  background: rgb(97,218,251);
+  opacity: 1;
 }
 .level-selector {
   grid-area: 2/1/span 1/ span 1;
