@@ -9,7 +9,8 @@ class App extends React.Component {
     this.buttonToggleTwo = this.buttonToggleTwo.bind(this);
     this.buttonToggleX = this.buttonToggleX.bind(this);
     this.buttonToggleO = this.buttonToggleO.bind(this);
-    
+    this.updateBoard = this.updateBoard.bind(this);
+   
     this.state = {
       level: 1,
       player_token: "X",
@@ -20,14 +21,15 @@ class App extends React.Component {
       btnX: "off",
       btnO: "off",
       whosTurn: "player",
-      board: ["X","X","",
-              "","","",
-              "","", ""]
+      board: ["X","O","X",
+              "O","O","",
+              "O","", "O"]
     }; 
   }
 
   updateBoard(square, int, token) {
-    let theOtherGuy = this.state.whosTurn
+    let theOtherGuy;
+    console.log('theOtherGuy', theOtherGuy);
     theOtherGuy === "player" ?  theOtherGuy = "AI" : theOtherGuy = "player";
     const newArray = this.state.board.slice();  
     console.log('newArray', newArray);  
@@ -39,12 +41,12 @@ class App extends React.Component {
         whosTurn: theOtherGuy
       };
     });
+
+    console.log('state', this.state);
     if(this.state.board[int] !== "" || this.state.whosTurn === "AI") {
       document.getElementById('sq'+ int).setAttribute("disabled","true");
     }
-     checkForWinOrDraw(newArray);
-    
-
+     checkForWinOrDraw(newArray, this.state);
   }
   handlerLevel(id) {
     if(id === "btn1"){
@@ -224,9 +226,11 @@ class App extends React.Component {
                   o.classList.toggle("sm-button-clicked");
                 }         
             }
+            
+              
+              
  
   render() {
-    console.log(this.state);
     return (
       
       <div className="app">
@@ -330,34 +334,118 @@ class Footer extends React.Component {
 
 //----------------JS Helper Functions-------------------------
 
-function checkForWinOrDraw(arr) {
- //check for win
-  const array = [[arr[0],arr[1],arr[2]], [arr[3],arr[4],arr[5]], [arr[6],arr[7],arr[8]], 
-  [arr[0],arr[3],arr[6]], [arr[1],arr[4],arr[7]], [arr[2],arr[5],arr[8]], 
-  [arr[0],arr[4],arr[8]], [arr[2],arr[4],arr[6]] ];
-
-  array.map((c,i,a) => c.every(c => c === "X") && declareWinner(array[i])
-)
-
-function declareWinner(winningRow) {
-  console.log(winningRow);
-}
-
-
-
+function checkForWinOrDraw(arr, state) {
+  console.log('state', state);
+  //check for win
+   const array = [[arr[0],arr[1],arr[2]], [arr[3],arr[4],arr[5]], [arr[6],arr[7],arr[8]], 
+   [arr[0],arr[3],arr[6]], [arr[1],arr[4],arr[7]], [arr[2],arr[5],arr[8]], 
+   [arr[0],arr[4],arr[8]], [arr[2],arr[4],arr[6]] ];
+ //map over array of arrays- possible winning rows - and check if all are x or o
+  const hi = array.map((c,i,a) =>  c.every(d => d === "X"));
+  const trueIndex = hi.indexOf(true);
+  console.log('trueIndex', trueIndex);
+  
+ trueIndex === -1 ? checkForDraw(arr, state) : declareWinner(array[trueIndex], trueIndex, state)
+ }
+ 
+ function checkForDraw(arr, state) {
+   console.log('st',state);
   //check for draw after checking for win
   if(arr.every((c) => c !== "")) {
     //logic needed here
     alert('its a draw');
+  }else{
+    const turn = state.whosTurn
+    console.log('turn', turn);
+     if(turn === "AI") {
+       checkForClearBoard(arr, state);
+     }
   }
- 
- 
-
+}
+function declareWinner(winningRow, rowIndex, state) {
+  console.log("index", rowIndex);
+  console.log(winningRow);
+  //check to see what player matches the letter in the winningRow and call and post to the screen
+  if(winningRow[0] === state.player_token) {
+    alert('player wins');
+  }else{
+    alert('Computer Wins');
+  }
+  //light up the winning squares
+  lightUpSquares(rowIndex);
+}
   
- //const x = arr.slice(0,3).every((c) => c === "X");
-// console.log(x);
-   
- 
+ function lightUpSquares(rowIndex) {
+   let a;
+   let b;
+   let c;
+  console.log('rowIndex', rowIndex);
+  switch (rowIndex) {
+    case 0:
+        a = 0;
+        b = 1;
+        c = 2;
+        break;
+    case 1:
+        a = 3;
+        b = 4;
+        c = 5;
+        break;
+    case 2:
+        a = 6;
+        b = 7;
+        c = 8;
+        break;
+    case 3:
+        a = 0;
+        b = 3;
+        c = 6;
+        break;
+    case 4:
+        a = 1;
+        b = 4;
+        c = 7;
+        break;
+    case 5:
+        a = 2;
+        b = 5;
+        c = 8;
+        break;
+    case 6:
+        a = 0;
+        b = 4;
+        c = 8;
+        break;
+    case 7:
+        a = 2;
+        b = 4;
+        c = 6;
+        break;
+  }
+    timingSquareLighting(a,b,c);  
+  }
+
+function timingSquareLighting(A,B,C) {
+  document.getElementById('sq'+ A).classList.toggle("square-lighted");
+    setTimeout(() => {document.getElementById('sq'+ B).classList.toggle("square-lighted")}, 500);
+    setTimeout(() => {document.getElementById('sq'+ C).classList.toggle("square-lighted");}, 1000); 
+}
+
+//---------------------------AI LOGIC---------------------------------
+
+function checkForClearBoard(arr, state){
+  console.log('called checkForClearBoard');
+  //if the board is clear, call a function to choose a best first move; if not, call
+  //checkforaWinningMove
+  checkForAIWinningMove(arr, state);
+}
+function checkForAIWinningMove(arr, state) {
+  const array = [[arr[0],arr[1],arr[2]], [arr[3],arr[4],arr[5]], [arr[6],arr[7],arr[8]], 
+  [arr[0],arr[3],arr[6]], [arr[1],arr[4],arr[7]], [arr[2],arr[5],arr[8]], 
+  [arr[0],arr[4],arr[8]], [arr[2],arr[4],arr[6]] ];
+
+  const winCheck = array.map((c) => c);
+  console.log('filtered', winCheck);
 
 }
 
