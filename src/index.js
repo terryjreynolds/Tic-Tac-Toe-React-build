@@ -20,7 +20,7 @@ class App extends React.Component {
       btnX: "off",
       btnO: "off",
       whosTurn: "player",
-      board: ["","X","X",
+      board: ["X","X","",
               "","","",
               "","", ""]
     }; 
@@ -331,9 +331,31 @@ class Footer extends React.Component {
 //----------------JS Helper Functions-------------------------
 
 function checkForWinOrDraw(arr) {
+ //check for win
+  const array = [[arr[0],arr[1],arr[2]], [arr[3],arr[4],arr[5]], [arr[6],arr[7],arr[8]], 
+  [arr[0],arr[3],arr[6]], [arr[1],arr[4],arr[7]], [arr[2],arr[5],arr[8]], 
+  [arr[0],arr[4],arr[8]], [arr[2],arr[4],arr[6]] ];
+
+  array.map((c,i,a) => c.every(c => c === "X") && declareWinner(array[i])
+)
+
+function declareWinner(winningRow) {
+  console.log(winningRow);
+}
+
+
+
+  //check for draw after checking for win
+  if(arr.every((c) => c !== "")) {
+    //logic needed here
+    alert('its a draw');
+  }
+ 
+ 
+
   
- const x = arr.slice(0,3).every((c) => c === "X");
- console.log(x);
+ //const x = arr.slice(0,3).every((c) => c === "X");
+// console.log(x);
    
  
 
