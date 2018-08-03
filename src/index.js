@@ -28,25 +28,19 @@ class App extends React.Component {
   }
 
   updateBoard(square, int, token) {
-    let theOtherGuy;
-    console.log('theOtherGuy', theOtherGuy);
+    let theOtherGuy = this.state.whosTurn;
     theOtherGuy === "player" ?  theOtherGuy = "AI" : theOtherGuy = "player";
-    const newArray = this.state.board.slice();  
-    console.log('newArray', newArray);  
+    const newArray = this.state.board.slice();   
     newArray.splice(int, 1, token); 
-    console.log('spliced newArray', newArray);  
-    this.setState(() => {
-      return {
-        board: newArray,
-        whosTurn: theOtherGuy
-      };
-    });
-
-    console.log('state', this.state);
+    this.setState({board: newArray,
+      whosTurn: theOtherGuy
+    }, function () {
+      checkForWinOrDraw(this.state.board, this.state);
+  });
+    
     if(this.state.board[int] !== "" || this.state.whosTurn === "AI") {
       document.getElementById('sq'+ int).setAttribute("disabled","true");
     }
-     checkForWinOrDraw(newArray, this.state);
   }
   handlerLevel(id) {
     if(id === "btn1"){
@@ -335,21 +329,22 @@ class Footer extends React.Component {
 //----------------JS Helper Functions-------------------------
 
 function checkForWinOrDraw(arr, state) {
-  console.log('state', state);
-  //check for win
+  console.log('stateincheckForWinOrDraw', state);
+  //an array of all the possible winning rows
    const array = [[arr[0],arr[1],arr[2]], [arr[3],arr[4],arr[5]], [arr[6],arr[7],arr[8]], 
    [arr[0],arr[3],arr[6]], [arr[1],arr[4],arr[7]], [arr[2],arr[5],arr[8]], 
    [arr[0],arr[4],arr[8]], [arr[2],arr[4],arr[6]] ];
  //map over array of arrays- possible winning rows - and check if all are x or o
-  const hi = array.map((c,i,a) =>  c.every(d => d === "X"));
-  const trueIndex = hi.indexOf(true);
-  console.log('trueIndex', trueIndex);
-  
- trueIndex === -1 ? checkForDraw(arr, state) : declareWinner(array[trueIndex], trueIndex, state)
- }
- 
+  const trueIndexX =( array.map((c,i,a) =>  c.every(d => d === "X"))).indexOf(true);
+  const trueIndexO =( array.map((c,i,a) =>  c.every(d => d === "O"))).indexOf(true);
+  console.log('trueIndexX', trueIndexX);
+  console.log('trueIndexO', trueIndexO);
+  //this round of code golf just checks to see if any of the arrays within the array are either
+  //all Xs or all Os-- if neither, then check for draw before deciding whos turn it is.
+  trueIndexX !== -1 ? declareWinner(array[trueIndexX], trueIndexX, state) : trueIndexO !== -1 ? declareWinner(array[trueIndexO], trueIndexO, state) : checkForDraw(arr, state); 
+}
  function checkForDraw(arr, state) {
-   console.log('st',state);
+   console.log('state in checkForDraw',state);
   //check for draw after checking for win
   if(arr.every((c) => c !== "")) {
     //logic needed here
@@ -373,8 +368,7 @@ function declareWinner(winningRow, rowIndex, state) {
   }
   //light up the winning squares
   lightUpSquares(rowIndex);
-}
-  
+} 
  function lightUpSquares(rowIndex) {
    let a;
    let b;
@@ -421,6 +415,10 @@ function declareWinner(winningRow, rowIndex, state) {
         b = 4;
         c = 6;
         break;
+        default:
+        a = 0;
+        b = 1;
+        c = 2;
   }
     timingSquareLighting(a,b,c);  
   }
@@ -437,16 +435,23 @@ function checkForClearBoard(arr, state){
   console.log('called checkForClearBoard');
   //if the board is clear, call a function to choose a best first move; if not, call
   //checkforaWinningMove
-  checkForAIWinningMove(arr, state);
+  const boardIsEmpty = boardPopulation(state);
+  boardIsEmpty === 9 ? pickAGoodFirstAIMove() : checkForAIWinningMove(arr, state); 
+}
+function boardPopulation(state) {
+  console.log('im in boardIsEmpty', state.board);
+  return (state.board.filter((c) => c === "")).length; 
 }
 function checkForAIWinningMove(arr, state) {
+  
   const array = [[arr[0],arr[1],arr[2]], [arr[3],arr[4],arr[5]], [arr[6],arr[7],arr[8]], 
   [arr[0],arr[3],arr[6]], [arr[1],arr[4],arr[7]], [arr[2],arr[5],arr[8]], 
   [arr[0],arr[4],arr[8]], [arr[2],arr[4],arr[6]] ];
-
   const winCheck = array.map((c) => c);
-  console.log('filtered', winCheck);
-
+  console.log('filtered', 'im in checkForAIWinningMove', winCheck);
+}
+function pickAGoodFirstAIMove() {
+  console.log('Im in pickAGoodFirstAIMove');
 }
 
 
