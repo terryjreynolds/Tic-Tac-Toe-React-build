@@ -10,6 +10,7 @@ class App extends React.Component {
     this.buttonToggleX = this.buttonToggleX.bind(this);
     this.buttonToggleO = this.buttonToggleO.bind(this);
     this.updateBoard = this.updateBoard.bind(this);
+    window.AppComponent = this;
    
     this.state = {
       level: 1,
@@ -22,12 +23,12 @@ class App extends React.Component {
       btnO: "off",
       whosTurn: "player",
       board: ["X","O","X",
-              "O","O","",
-              "O","", "O"]
+              "O","O",5,
+              "O",7, "O"]
     }; 
   }
-
-  updateBoard(square, int, token) {
+ 
+  updateBoard(int, token) {
     let theOtherGuy = this.state.whosTurn;
     theOtherGuy === "player" ?  theOtherGuy = "AI" : theOtherGuy = "player";
     const newArray = this.state.board.slice();   
@@ -38,7 +39,7 @@ class App extends React.Component {
       checkForWinOrDraw(this.state.board, this.state);
   });
     
-    if(this.state.board[int] !== "" || this.state.whosTurn === "AI") {
+    if(typeof this.state.board[int] !== "number" || this.state.whosTurn === "AI") {
       document.getElementById('sq'+ int).setAttribute("disabled","true");
     }
   }
@@ -346,7 +347,7 @@ function checkForWinOrDraw(arr, state) {
  function checkForDraw(arr, state) {
    console.log('state in checkForDraw',state);
   //check for draw after checking for win
-  if(arr.every((c) => c !== "")) {
+  if(arr.every((c) => typeof c !== "number")) {
     //logic needed here
     alert('its a draw');
   }else{
@@ -362,9 +363,9 @@ function declareWinner(winningRow, rowIndex, state) {
   console.log(winningRow);
   //check to see what player matches the letter in the winningRow and call and post to the screen
   if(winningRow[0] === state.player_token) {
-    alert('player wins');
+    console.log('player wins');
   }else{
-    alert('Computer Wins');
+    console.log('Computer Wins');
   }
   //light up the winning squares
   lightUpSquares(rowIndex);
@@ -440,18 +441,37 @@ function checkForClearBoard(arr, state){
 }
 function boardPopulation(state) {
   console.log('im in boardIsEmpty', state.board);
-  return (state.board.filter((c) => c === "")).length; 
+  return (state.board.filter((c) => typeof c === "number")).length; 
 }
 function checkForAIWinningMove(arr, state) {
-  
   const array = [[arr[0],arr[1],arr[2]], [arr[3],arr[4],arr[5]], [arr[6],arr[7],arr[8]], 
   [arr[0],arr[3],arr[6]], [arr[1],arr[4],arr[7]], [arr[2],arr[5],arr[8]], 
   [arr[0],arr[4],arr[8]], [arr[2],arr[4],arr[6]] ];
-  const winCheck = array.map((c) => c);
-  console.log('filtered', 'im in checkForAIWinningMove', winCheck);
+  //find an array among arrays that has two AI tokens and one empty string
+ const filtered =  (array.map((c,i) => (c.filter((d) => d !== state.player_token).length)).indexOf(3));
+ //if filtered has an array with two AI tokens and one empty string, find the empty string so
+ //AI may make a move in that square
+ if(filtered !== -1) {
+  const targetIndex = (array[filtered].map((c,i) => typeof c === "number")).indexOf(true);
+  const trueTargetIndex = array[1][2];
+  console.log('trueTargetIndex', trueTargetIndex);
+  let ai_token = "X";
+  state.player_token === "X" ? ai_token = "O" : ai_token = "X";
+ window.AppComponent.updateBoard(trueTargetIndex, ai_token);
+  console.log('targetIndex', targetIndex);
+ }else {
+   shouldAIBlock() 
+  
+ }
+ 
+  console.log(filtered, 'im in checkForAIWinningMove');
 }
+
 function pickAGoodFirstAIMove() {
   console.log('Im in pickAGoodFirstAIMove');
+}
+function shouldAIBlock() {
+  console.log('im in shouldAIBlock');
 }
 
 
