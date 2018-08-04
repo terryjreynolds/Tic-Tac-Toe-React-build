@@ -9,8 +9,6 @@ class App extends React.Component {
     this.buttonToggleTwo = this.buttonToggleTwo.bind(this);
     this.buttonToggleX = this.buttonToggleX.bind(this);
     this.buttonToggleO = this.buttonToggleO.bind(this);
-    this.updateBoard = this.updateBoard.bind(this);
-    window.AppComponent = this;
    
     this.state = {
       level: 1,
@@ -20,33 +18,11 @@ class App extends React.Component {
       btn1: "off",
       btn2: "off",
       btnX: "off",
-      btnO: "off",
-      whosTurn: "player",
-      board: ["X","O","X",
-              "O","O","",
-              "O","", "O"]
+      btnO: "off"
     }; 
   }
  
-  updateBoard(square, int, token) {
-    console.log('board', this.state.board)
-    console.log("im in updateBoard");
-    let theOtherGuy = this.state.whosTurn;
-    console.log('theotherguy',theOtherGuy);
-    theOtherGuy === "player" ?  theOtherGuy = "AI" : theOtherGuy = "player";
-    const newArray = this.state.board.slice();   
-    console.log('newArray', newArray);
-    newArray.splice(int, 1, token); 
-    this.setState(() => {
-      return {
-        board: newArray,
-        whosTurn: theOtherGuy
-      };
-    });
-    
-    console.log('statecheck', this.state);
-    checkForWinOrDraw(this.state.board, this.state);
-  }
+ 
   handlerLevel(id) {
     if(id === "btn1"){
       if(this.state.level === 2){
@@ -236,7 +212,7 @@ class App extends React.Component {
         <h1 className="game-title">TicTacToe</h1>
           <ScoreBoard />
           <ResetButton value={this.state} action={this.handlerReset.bind(this)} />
-          <GameBoard state = {this.state} whosTurn={this.state.whosTurn} player_token={this.state.player_token} board ={this.state.board} updateBoard={this.updateBoard} />
+          <GameBoard state = {this.state} whosTurn={this.state.whosTurn} player_token={this.state.player_token} />
           <LevelSelector  action={this.handlerLevel.bind(this)} buttonToggleOne={this.buttonToggleOne} buttonToggleTwo={this.buttonToggleTwo} />
           <TokenSelector action={this.handlerToken.bind(this)} buttonToggleX={this.buttonToggleX} buttonToggleO={this.buttonToggleO} />
           <Footer />
@@ -245,47 +221,83 @@ class App extends React.Component {
   }
 }
 class GameBoard extends React.Component { 
-  handleClick(int, token) {
-   this.props.updateBoard(int, token);
+  constructor(props) {
+    super(props);
+    this.state = {
+      board: ["X","O","X",
+              "O","O","",
+              "O","", "O"],
+              whosTurn: "player"
+    };
+   
+    this.handleClick = this.handleClick.bind(this);
+    
   }
+  
+  handleClick = (int, token) => {
+    if(this.state.whosTurn === "player") {
+    console.log('int', int, 'token', token);
+    const newArray = this.state.board.slice();   
+    
+ newArray.splice(int, 1, token);
+ console.log('newArray', newArray);
+ let theOtherGuy = this.state.whosTurn;
+    theOtherGuy === "player" ?  theOtherGuy = "AI" : theOtherGuy = "player";
+
+ this.setState(
+ {
+    board: newArray,
+    whosTurn: theOtherGuy
+},
+() => {tryItOut(this.state.board)}
+ );
+ 
+
+    }
+   
+    
+   console.log('board', this.state.board, 'whosTurn', this.state.whosTurn);
+   // checkForWinOrDraw(this.state.board, this.state);
+  }
+
   render() {
     return (
       <div className="game-board">
                 <button 
                 className="square" id="sq0" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq0", 0, this.props.player_token)}}}>
-               {this.props.board[0]}
+               {this.state.board[0]}
                 </button>
                 <button 
                 className="square" id="sq1" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq1", 1, this.props.player_token)}}}>
-                {this.props.board[1]}
+                {this.state.board[1]}
                 </button>
                 <button 
                 className="square" id="sq2" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq1", 2, this.props.player_token)}}}>
-                {this.props.board[2]}
+                {this.state.board[2]}
                 </button>
                 <button 
                 className="square" id="sq3" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq3", 3, this.props.player_token)}}}>
-                {this.props.board[3]}
+                {this.state.board[3]}
                 </button>
                 <button 
                 className="square" id="sq4" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq4", 4, this.props.player_token)}}}>
-                {this.props.board[4]}
+                {this.state.board[4]}
                 </button>
                 <button 
                 className="square" id="sq5" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq5", 5, this.props.player_token)}}}>
-                {this.props.board[5]}
+                {this.state.board[5]}
                 </button>
                 <button 
                 className="square" id="sq6" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq6", 6, this.props.player_token)}}}>
-                {this.props.board[6]}
+                {this.state.board[6]}
                 </button>
                 <button 
-                className="square" id="sq7" onClick={(e) => {if(this.props.whosTurn === "player") {this.handleClick("sq7", 7, this.props.player_token)}}}>
-                {this.props.board[7]}
+                className="square" id="sq7" onClick={() => this.handleClick(7, this.props.player_token)}>
+                {this.state.board[7]}
                 </button>
                 <button 
                 className="square" id="sq8" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq8", 8, this.props.player_token)}}}>
-                {this.props.board[8]}
+                {this.state.board[8]}
                 </button>
       </div>
     );               
@@ -335,7 +347,9 @@ class Footer extends React.Component {
 }
 
 //----------------JS Helper Functions-------------------------
-
+function tryItOut(state) {
+  console.log(state);
+}
 function checkForWinOrDraw(arr, state) {
   console.log('stateincheckForWinOrDraw', state);
   //an array of all the possible winning rows
