@@ -23,25 +23,29 @@ class App extends React.Component {
       btnO: "off",
       whosTurn: "player",
       board: ["X","O","X",
-              "O","O",5,
-              "O",7, "O"]
+              "O","O","",
+              "O","", "O"]
     }; 
   }
  
-  updateBoard(int, token) {
+  updateBoard(square, int, token) {
+    console.log('board', this.state.board)
+    console.log("im in updateBoard");
     let theOtherGuy = this.state.whosTurn;
+    console.log('theotherguy',theOtherGuy);
     theOtherGuy === "player" ?  theOtherGuy = "AI" : theOtherGuy = "player";
     const newArray = this.state.board.slice();   
+    console.log('newArray', newArray);
     newArray.splice(int, 1, token); 
-    this.setState({board: newArray,
-      whosTurn: theOtherGuy
-    }, function () {
-      checkForWinOrDraw(this.state.board, this.state);
-  });
+    this.setState(() => {
+      return {
+        board: newArray,
+        whosTurn: theOtherGuy
+      };
+    });
     
-    if(typeof this.state.board[int] !== "number" || this.state.whosTurn === "AI") {
-      document.getElementById('sq'+ int).setAttribute("disabled","true");
-    }
+    console.log('statecheck', this.state);
+    checkForWinOrDraw(this.state.board, this.state);
   }
   handlerLevel(id) {
     if(id === "btn1"){
@@ -232,7 +236,7 @@ class App extends React.Component {
         <h1 className="game-title">TicTacToe</h1>
           <ScoreBoard />
           <ResetButton value={this.state} action={this.handlerReset.bind(this)} />
-          <GameBoard whosTurn={this.state.whosTurn} player_token={this.state.player_token} board ={this.state.board} updateBoard={this.updateBoard.bind(this)} />
+          <GameBoard state = {this.state} whosTurn={this.state.whosTurn} player_token={this.state.player_token} board ={this.state.board} updateBoard={this.updateBoard} />
           <LevelSelector  action={this.handlerLevel.bind(this)} buttonToggleOne={this.buttonToggleOne} buttonToggleTwo={this.buttonToggleTwo} />
           <TokenSelector action={this.handlerToken.bind(this)} buttonToggleX={this.buttonToggleX} buttonToggleO={this.buttonToggleO} />
           <Footer />
@@ -241,6 +245,9 @@ class App extends React.Component {
   }
 }
 class GameBoard extends React.Component { 
+  handleClick(int, token) {
+   this.props.updateBoard(int, token);
+  }
   render() {
     return (
       <div className="game-board">
@@ -273,7 +280,7 @@ class GameBoard extends React.Component {
                 {this.props.board[6]}
                 </button>
                 <button 
-                className="square" id="sq7" onClick={(e) => {if(this.props.whosTurn === "player") {this.props.updateBoard("sq7", 7, this.props.player_token)}}}>
+                className="square" id="sq7" onClick={(e) => {if(this.props.whosTurn === "player") {this.handleClick("sq7", 7, this.props.player_token)}}}>
                 {this.props.board[7]}
                 </button>
                 <button 
@@ -347,7 +354,7 @@ function checkForWinOrDraw(arr, state) {
  function checkForDraw(arr, state) {
    console.log('state in checkForDraw',state);
   //check for draw after checking for win
-  if(arr.every((c) => typeof c !== "number")) {
+  if(arr.every((c) => c !== "")) {
     //logic needed here
     alert('its a draw');
   }else{
@@ -437,11 +444,12 @@ function checkForClearBoard(arr, state){
   //if the board is clear, call a function to choose a best first move; if not, call
   //checkforaWinningMove
   const boardIsEmpty = boardPopulation(state);
+  console.log('boardIsEmpty', boardIsEmpty);
   boardIsEmpty === 9 ? pickAGoodFirstAIMove() : checkForAIWinningMove(arr, state); 
 }
 function boardPopulation(state) {
-  console.log('im in boardIsEmpty', state.board);
-  return (state.board.filter((c) => typeof c === "number")).length; 
+  console.log('im in boardPopulation', state.board);
+  return (state.board.filter((c) => c === "")).length; 
 }
 function checkForAIWinningMove(arr, state) {
   const array = [[arr[0],arr[1],arr[2]], [arr[3],arr[4],arr[5]], [arr[6],arr[7],arr[8]], 
@@ -449,30 +457,45 @@ function checkForAIWinningMove(arr, state) {
   [arr[0],arr[4],arr[8]], [arr[2],arr[4],arr[6]] ];
   //find an array among arrays that has two AI tokens and one empty string
  const filtered =  (array.map((c,i) => (c.filter((d) => d !== state.player_token).length)).indexOf(3));
+ console.log('filtered', filtered);
+
  //if filtered has an array with two AI tokens and one empty string, find the empty string so
- //AI may make a move in that square
+ //AI may make a move in that square for the win
+ 
  if(filtered !== -1) {
-  const targetIndex = (array[filtered].map((c,i) => typeof c === "number")).indexOf(true);
-  const trueTargetIndex = array[1][2];
-  console.log('trueTargetIndex', trueTargetIndex);
+  const targetIndex = (array[filtered].map((c,i) => c === "")).indexOf(true);
+  console.log('targetIndex', targetIndex);
+ 
+  const element = stateReferenceConverter(filtered, targetIndex);
+  console.log('element', element);
+  function stateReferenceConverter(a, b) {
+    console.log('inside machine', a, b);
+  return a === 0 && b === 0 ? 0 : a === 0 && b === 1 ?  1 : a === 0 && b === 2 ?  2 : a === 1 && b === 0 ? 3 : a === 1 && b === 1 ? 4 : a === 1 && b === 2 ? 5 : "";
+      
+      }
   let ai_token = "X";
   state.player_token === "X" ? ai_token = "O" : ai_token = "X";
- window.AppComponent.updateBoard(trueTargetIndex, ai_token);
-  console.log('targetIndex', targetIndex);
- }else {
+ window.AppComponent.updateBoard(element, ai_token);
+  
+}else {
    shouldAIBlock() 
   
  }
+
  
-  console.log(filtered, 'im in checkForAIWinningMove');
+  
+}
+
+
+function shouldAIBlock() {
+  console.log('im in shouldAIBlock');
 }
 
 function pickAGoodFirstAIMove() {
   console.log('Im in pickAGoodFirstAIMove');
 }
-function shouldAIBlock() {
-  console.log('im in shouldAIBlock');
-}
+
+
 
 
 ReactDOM.render(
