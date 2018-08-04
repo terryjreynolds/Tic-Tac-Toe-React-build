@@ -224,8 +224,8 @@ class GameBoard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      board: ["","","",
-              "","","",
+      board: ["X","O","X",
+              "O","O","",
               "","", ""],
               whosTurn: "player"
     };
@@ -319,7 +319,8 @@ checkForAIWinningMove(arr, state) {
   [arr[0],arr[4],arr[8]], [arr[2],arr[4],arr[6]] ];
   console.log('array',array);
   //find an array among arrays that has two AI tokens and one empty string
- const filtered =  (array.map((c,i) => (c.filter((d) => d !== this.props.player_token).length)).indexOf(3));
+ 
+  const filtered = ((array.map((c,i) => (c.filter((d) => d === this.props.player_token || d === "" )))).map((c) => c.length === 1)).indexOf(true);
  console.log('filtered', filtered);
 
  //if filtered has an array with two AI tokens and one empty string, find the empty string so
