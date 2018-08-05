@@ -9,6 +9,7 @@ class App extends React.Component {
     this.buttonToggleTwo = this.buttonToggleTwo.bind(this);
     this.buttonToggleX = this.buttonToggleX.bind(this);
     this.buttonToggleO = this.buttonToggleO.bind(this);
+    resetAppState = resetAppState.bind(this);
    
     this.state = {
       level: 1,
@@ -211,7 +212,7 @@ class App extends React.Component {
       <div className="app">
         <h1 className="game-title">TicTacToe</h1>
           <ScoreBoard />
-          <ResetButton value={this.state} action={this.handlerReset.bind(this)} />
+          <ResetButton />
           <GameBoard state = {this.state} whosTurn={this.state.whosTurn} player_token={this.state.player_token} />
           <LevelSelector  action={this.handlerLevel.bind(this)} buttonToggleOne={this.buttonToggleOne} buttonToggleTwo={this.buttonToggleTwo} />
           <TokenSelector action={this.handlerToken.bind(this)} buttonToggleX={this.buttonToggleX} buttonToggleO={this.buttonToggleO} />
@@ -246,6 +247,7 @@ class GameBoard extends React.Component {
     this.heuristicAIMove = this.heuristicAIMove.bind(this);
     this.chooseACorner = this.chooseACorner.bind(this);
     this.chooseFromRemainingCells = this.chooseFromRemainingCells.bind(this);
+    resetGameBoardState = resetGameBoardState.bind(this);
    
 
   }
@@ -516,7 +518,10 @@ declareWinner(winningRow, rowIndex, state) {
 
   render() {
     return (
+      
+      
       <div className="game-board">
+      
                 <button 
                 className="square" id="sq0" onClick={() => this.handleClick(0, this.props.player_token)}>
                {this.state.board[0]}
@@ -553,6 +558,7 @@ declareWinner(winningRow, rowIndex, state) {
                 className="square" id="sq8" onClick={() => this.handleClick(8, this.props.player_token)}>
                 {this.state.board[8]}
                 </button>
+                
       </div>
     );               
  }  
@@ -568,10 +574,47 @@ class ScoreBoard extends React.Component {
 class ResetButton extends React.Component {
   render() {
     return (
-      <button className="reset-button" onClick={(e) => this.props.action()}>Reset Game</button>
+      <button className="reset-button" onClick={() => {resetGameBoardState(); resetAppState()}}>Reset Game</button>
     );
   }
 }
+//a helper function external to the components. It is called on the click of the reset button //and since I bound it to the GameBoard component with 'this', it will setState on the //GameBoard. Sibling to sibling state change. Ditto for the resetAppState.
+   function resetGameBoardState() {
+    this.setState(() => {
+      return {
+        
+      };
+      
+    });
+    this.setState(
+      {
+        board: ["","","",
+        "","","",
+         "","", ""],
+whosTurn: "player"
+     },
+     () => {console.log('game reset', this.state)}
+      );
+    
+    
+}
+function resetAppState() {
+  this.setState(
+    {
+      level: 1,
+    player_token: "X",
+    player_score: 0,
+    computer_score: 0,
+    btn1: "off",
+    btn2: "off",
+    btnX: "off",
+    btnO: "off"
+   },
+   () => {console.log('resetAppState', this.state);}
+    );
+  
+}
+
 class LevelSelector extends React.Component {
   render() {
     return (     

@@ -44,6 +44,7 @@ body {
   margin: .5vw;
 }
 .reset-button {
+  display:inline-flex;
   margin: auto;
   font-size: 1vw;
   text-align: center;
